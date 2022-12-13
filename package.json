@@ -1,0 +1,19 @@
+{
+  "name": "hunger-genie",
+  "version": "1.0.0",
+  "description": "food delivery system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahilb8/Hunger-Genie.git"
+  },
+  "author": "sahil bhanastarkar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sahilb8/Hunger-Genie/issues"
+  },
+  "homepage": "https://github.com/sahilb8/Hunger-Genie#readme"
+}
