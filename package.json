@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sahilb8/Hunger-Genie/issues"
   },
-  "homepage": "https://github.com/sahilb8/Hunger-Genie#readme"
+  "homepage": "https://github.com/sahilb8/Hunger-Genie#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
