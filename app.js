@@ -14,8 +14,6 @@ app.use('/admin',adminRouter);
 app.use(restaurantRouter);
 
 app.use((req,res,next) =>{
-    console.log('POPOPOPOOPPOPOP');
-    console.log(__dirname);
   res.status(404).sendFile(path.join(__dirname,'views','404.html'));
 });
 
