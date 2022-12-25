@@ -4,13 +4,20 @@ const express = require('express');
 const router = express.Router();
 const routeDir = require('../utils/path');
 
+const dishes = [];
+
 router.get('/add-biryani',(req,res,next) => {
-    res.sendFile(path.join(routeDir,'views/add-biryani.html'));
+    res.render('add-biryani',{
+        pageTitle: 'Add Biryani',
+        path:'admin/add-biryani',
+    });
+
 });
  
-router.post('/biryani',(req,res,next) => {
-    console.log(req.body);
+router.post('/add-biryani',(req,res,next) => {
+    dishes.push({'title': req.body.title});
     res.redirect('/');
 });
 
-module.exports = router;
+exports.routes = router;
+exports.dishes = dishes;
