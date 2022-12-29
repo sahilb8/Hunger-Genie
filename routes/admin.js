@@ -1,23 +1,10 @@
-const path = require('path');
-
 const express = require('express');
 const router = express.Router();
-const routeDir = require('../utils/path');
 
-const dishes = [];
+const productController = require('../controller/dishes');
 
-router.get('/add-biryani',(req,res,next) => {
-    res.render('add-biryani',{
-        pageTitle: 'Add Biryani',
-        path:'admin/add-biryani',
-    });
-
-});
+router.get('/add-biryani',productController.getAddBiryani);
  
-router.post('/add-biryani',(req,res,next) => {
-    dishes.push({'title': req.body.title});
-    res.redirect('/');
-});
+router.post('/add-biryani',productController.postAddBiryani);
 
-exports.routes = router;
-exports.dishes = dishes;
+module.exports  = router;
