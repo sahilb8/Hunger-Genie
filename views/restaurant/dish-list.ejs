@@ -1,0 +1,36 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+
+    <main>
+        <% if (dishes.length > 0) { %>
+            <div class="grid">
+                <% for (let dish of dishes) { %>
+                    <article class="card product-item">
+                        <header class="card__header">
+                            <h1 class="product__title"><%= dish.title %></h1>
+                        </header>
+                        <div class="card__image">
+                            <img src=<%= dish.imageUrl %>
+                                alt="A Book">
+                        </div>
+                        <div class="card__content">
+                            <h2 class="product__price">$<%= dish.price %></h2>
+                            <p class="product__description"><%= dish.description %></p>
+                        </div>
+                        <div class="card__actions">
+                            <form action="/restaurant/add-cart" method="POST">
+                                <button type="submit" class="btn">Add Cart</button>
+                            </form>
+                        </div>
+                    </article>
+                <% } %>
+            </div>
+        <% } else { %>
+            <h1>No Dishes Found!</h1>
+        <% } %>
+    </main>
+<%- include('../includes/end.ejs') %>

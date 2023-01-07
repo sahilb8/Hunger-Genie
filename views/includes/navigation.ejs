@@ -2,7 +2,12 @@
     <nav class="main-header__nav">
         <ul class="main-header__item-list">
             <li class="main-header__item"><a class="<%= path === '/' ? 'active' : '' %>" href="/">Restaurant</a></li>
-            <li class="main-header__item"><a class="<%= path === '/admin/add-biryani' ? 'active' : '' %>" href="/admin/add-biryani">Add Biryani</a></li>
+            <li class="main-header__item"><a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a></li>
+            <li class="main-header__item"><a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a></li>
+            <li class="main-header__item"><a class="<%= path === '/dishes' ? 'active' : '' %>" href="/dishes">Dishes</a></li>
+            <li class="main-header__item"><a class="<%= path === '/checkout' ? 'active' : '' %>" href="/checkout">Checkout</a></li>
+            <li class="main-header__item"><a class="<%= path === '/admin/add-dish' ? 'active' : '' %>" href="/admin/add-dish">Add Dish</a></li>
+            <li class="main-header__item"><a class="<%= path === '/admin/dishes' ? 'active' : '' %>" href="/admin/dishes">Admin Dishes</a></li>
         </ul>
     </nav>
 </header>
