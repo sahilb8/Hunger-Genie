@@ -16,8 +16,11 @@ const getContentOnFileRead = cb => {
 }
 
 module.exports = class Dish {
-    constructor(t) {
-        this.title = t;
+    constructor(title, price, description, imageUrl) {
+        this.title = title;
+        this.price = price;
+        this.description = description;
+        this.imageUrl = imageUrl;
     };
 
     save(){

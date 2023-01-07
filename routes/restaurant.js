@@ -3,8 +3,19 @@ const path = require('path');
 
 const router = express.Router();
 
-const productsController = require('../controller/dishes');
+const restaurantController = require('../controller/restaurantController');
 
-router.get('/',productsController.getDishes);
+router.get('/',restaurantController.getIndex);
+
+router.get('/cart',restaurantController.getCart);
+
+router.get('/orders',restaurantController.getOrders);
+
+
+router.get('/dishes',restaurantController.getDishes);
+
+router.get('/checkout',restaurantController.getCheckout);
+
+
 
 module.exports  = router;
