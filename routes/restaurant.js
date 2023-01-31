@@ -9,8 +9,11 @@ router.get('/',restaurantController.getIndex);
 
 router.get('/cart',restaurantController.getCart);
 
+router.post('/cart',restaurantController.postCart);
+
 router.get('/orders',restaurantController.getOrders);
 
+router.get('/dishes/:dishId',restaurantController.getDish);
 
 router.get('/dishes',restaurantController.getDishes);
 

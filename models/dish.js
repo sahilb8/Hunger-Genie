@@ -1,19 +1,4 @@
-const path = require('path');
-const fs = require('fs');
-
-const p = path.join(path.dirname(require.main.filename),'data','products.json');
-
-const getContentOnFileRead = cb => {
-    fs.readFile(p,(err,fileContent)=>{
-        if(err){
-            console.log(err);
-            cb([]);
-        } else {
-            cb(JSON.parse(fileContent));
-        }
-    
-    });
-}
+const db = require('../utils/database');
 
 module.exports = class Dish {
     constructor(title, price, description, imageUrl) {
@@ -24,17 +9,15 @@ module.exports = class Dish {
     };
 
     save(){
-        getContentOnFileRead((dishes) => {
-            dishes.push(this);
-            fs.writeFile(p,JSON.stringify(dishes),(err)=>{
-                if(err){
-                    console.log(err);
-                }
-            });
-        })
+       return db.execute('INSERT INTO dishes(title,price,description,imageUrl) VALUES(?,?,?,?)',
+        [this.title,this.price,this.description,this.imageUrl]);
     }
 
-    static fetchAll(cb){
-        getContentOnFileRead(cb);
+    static fetchAll(){
+        return db.execute('SELECT * FROM dishes');
+    }
+
+    static fetchDishById(id) {
+        return db.execute('SELECT * FROM dishes where dishes.id = ?', [id]);
     }
 };
