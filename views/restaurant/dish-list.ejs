@@ -23,7 +23,8 @@
                         </div>
                         <div class="card__actions">
                             <form action="/restaurant/add-cart" method="POST">
-                                <button type="submit" class="btn">Add Cart</button>
+                                <a href="/dishes/<%=dish.id%>" class="btn">Details</a>
+                                <%- include('../includes/add-to-cart.ejs', {dish:dish})%>
                             </form>
                         </div>
                     </article>

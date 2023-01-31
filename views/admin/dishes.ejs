@@ -22,7 +22,7 @@
                             <p class="product__description"><%= dish.description %></p>
                         </div>
                         <div class="card__actions">
-                            <form action="/admin/edit-dish" method="POST">
+                            <form action="/admin/edit-dish/<%= dish.id %>?edit=true" method="GET">
                                 <button class="btn" type="submit">Edit</button>
                             </form>
                             <form action="/admin/delete-dish" method="POST">
