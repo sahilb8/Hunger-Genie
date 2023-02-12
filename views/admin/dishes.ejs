@@ -1,39 +1,44 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/product.css">
-</head>
+    <link rel="stylesheet" href="/css/dish.css">
+    </head>
 
-<body>
-    <%- include('../includes/navigation.ejs') %>
+    <body>
+        <%- include('../includes/navigation.ejs') %>
 
-    <main>
-        <% if (dishes.length > 0) { %>
-            <div class="grid">
-                <% for (let dish of dishes) { %>
-                    <article class="card product-item">
-                        <header class="card__header">
-                            <h1 class="product__title"><%= dish.title %></h1>
-                        </header>
-                        <div class="card__image">
-                            <img src=<%= dish.imageUrl %>
-                                alt="A Book">
-                        </div>
-                        <div class="card__content">
-                            <h2 class="product__price">$<%= dish.price %></h2>
-                            <p class="product__description"><%= dish.description %></p>
-                        </div>
-                        <div class="card__actions">
-                            <form action="/admin/edit-dish/<%= dish.id %>?edit=true" method="GET">
-                                <button class="btn" type="submit">Edit</button>
-                            </form>
-                            <form action="/admin/delete-dish" method="POST">
-                                <button class="btn" type="submit">Delete</button>
-                            </form>
-                        </div>
-                    </article>
-                <% } %>
-            </div>
-        <% } else { %>
-            <h1>No Dishes Found!</h1>
-        <% } %>
-    </main>
-<%- include('../includes/end.ejs') %>
+            <main>
+                <% if (dishes.length > 0) { %>
+                    <div class="grid">
+                        <% for (let dish of dishes) { %>
+                            <article class="card dish-item">
+                                <header class="card__header">
+                                    <h1 class="dish__title">
+                                        <%= dish.title %>
+                                    </h1>
+                                </header>
+                                <div class="card__image">
+                                    <img src="<%= dish.imageUrl %>" alt="<%= dish.title %>">
+                                </div>
+                                <div class="card__content">
+                                    <h2 class="dish__price">$
+                                        <%= dish.price %>
+                                    </h2>
+                                    <p class="dish__description">
+                                        <%= dish.description %>
+                                    </p>
+                                </div>
+                                <div class="card__actions">
+                                    <a href="/admin/edit-dish/<%= dish.id %>?edit=true" class="btn">Edit</a>
+                                    <form action="/admin/delete-dish" method="POST">
+                                        <input type="hidden" value="<%= dish.id %>" name="dishId">
+                                        <button class="btn" type="submit">Delete</button>
+                                    </form>
+
+                                </div>
+                            </article>
+                            <% } %>
+                    </div>
+                    <% } else { %>
+                        <h1>No dishs Found!</h1>
+                        <% } %>
+            </main>
+            <%- include('../includes/end.ejs') %>

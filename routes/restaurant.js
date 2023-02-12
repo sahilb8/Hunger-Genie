@@ -11,6 +11,8 @@ router.get('/cart',restaurantController.getCart);
 
 router.post('/cart',restaurantController.postCart);
 
+router.post('/cart-delete-item',restaurantController.postCartDeleteDish);
+
 router.get('/orders',restaurantController.getOrders);
 
 router.get('/dishes/:dishId',restaurantController.getDish);
@@ -18,6 +20,8 @@ router.get('/dishes/:dishId',restaurantController.getDish);
 router.get('/dishes',restaurantController.getDishes);
 
 router.get('/checkout',restaurantController.getCheckout);
+
+router.post('/create-order',restaurantController.postCreateOrder);
 
 
 

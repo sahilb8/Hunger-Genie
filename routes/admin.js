@@ -13,5 +13,8 @@ router.get('/edit-dish/:dishId',adminController.getEditDish);
 
 router.post('/edit-dish',adminController.postEditDish);
 
+router.post('/delete-dish',adminController.postDeleteDish);
+
+
 
 module.exports  = router;

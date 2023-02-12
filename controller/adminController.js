@@ -4,6 +4,7 @@ exports.getAddDish =  (req,res,next) => {
     res.render('admin/edit-dish',{
         pageTitle: 'Add Dish',
         path:'admin/add-dish',
+        editing: false,
     });
 }
 
@@ -12,30 +13,40 @@ exports.postAddDish = (req,res,next) => {
     const description = req.body.description;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
-    const dish = new Dish(title, price, description, imageUrl);
-    dish.save().then(()=>{
+    req.user.createDish({
+        title: title,
+        price: price,
+        description: description,
+        imageUrl: imageUrl,
+    })
+    .then((response) => {
+        console.log('created dish');
         res.redirect('/');
+        
     }).catch((err) => {
         console.log(err);
     });
 }
 
 exports.getEditDish =  (req,res,next) => {
-    const isEditMode = req.query.edit;
+    const editing = req.query.edit;
     const dishId = req.params.dishId;
-    console.log(req.query);
-    if(!isEditMode){
+    if(!editing){
         return res.redirect('/');
     }
-    Dish.fetchDishById(dishId).then(([dish, rowData])=> {
+
+    req.user.getDishes({where : { id : dishId}})
+    // Dish.findByPk(dishId)
+    .then((dishes)=> {
+        const dish = dishes[0];
         if(!dish){
             return res.redirect('/');
         }
         res.render('admin/edit-dish',{
             pageTitle: 'Edit Dish',
             path:'admin/edit-dish',
-            editMode: isEditMode,
-            dish: dish[0],
+            editing: editing,
+            dish: dish,
         });
     }).catch((err)=>{
         console.log(err);
@@ -46,18 +57,50 @@ exports.getEditDish =  (req,res,next) => {
 
 
 exports.postEditDish = (req,res,next) => {
-    
+    const title = req.body.title;
+    const description = req.body.description;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const dishId = req.body.dishId;
+    console.log(req.body);
+    Dish.findByPk(dishId).then((dish) => {
+        dish.title = title;
+        dish.description = description;
+        dish.imageUrl = imageUrl;
+        dish.price = price;
+        return dish.save();
+    })
+    .then(result => {
+        console.log('dish updated');
+        res.redirect('/');
+    }).catch((err)=> {
+        console.log(err);
+    })
 }
 
 exports.getDishes =  (req,res,next) => {
-    Dish.fetchAll().then(([dishData,fieldData])=>{
+    req.user.getDishes()
+    // Dish.findAll()
+    .then((dishes) => {
         res.render('admin/dishes',{
-            dishes: dishData,
+            dishes: dishes,
             pageTitle: 'Admin Dishes',
             path:'/admin/dishes',
         });
     }).catch((err) => {
         console.log(err);
-    })
- 
+    });
+ }
+
+ exports.postDeleteDish = (req,res,next) => {
+     const dishId = req.body.dishId;
+
+     Dish.findByPk(dishId).then((dish) => {
+         return dish.destroy();
+     }).then(result => {
+         console.log('destroyed dish');
+         res.redirect('/');
+     }).catch((err) => {
+         console.log(err);
+     });
  }

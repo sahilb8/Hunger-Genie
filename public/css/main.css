@@ -51,6 +51,14 @@ main {
   color: #ffeb3b;
 }
 
+.image {
+  max-height: 20rem;
+}
+
+.image img {
+  height: 100%;
+}
+
 .grid {
   display: flex;
   flex-wrap: wrap;
