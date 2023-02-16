@@ -1,3 +1,4 @@
+const mongodb = require('mongodb');
 const Dish = require('../models/dish');
 
 exports.getAddDish =  (req,res,next) => {
@@ -13,12 +14,8 @@ exports.postAddDish = (req,res,next) => {
     const description = req.body.description;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
-    req.user.createDish({
-        title: title,
-        price: price,
-        description: description,
-        imageUrl: imageUrl,
-    })
+    let newDish = new Dish(title, price, imageUrl, description, null, req.user._id);
+    newDish.save()
     .then((response) => {
         console.log('created dish');
         res.redirect('/');
@@ -35,10 +32,8 @@ exports.getEditDish =  (req,res,next) => {
         return res.redirect('/');
     }
 
-    req.user.getDishes({where : { id : dishId}})
-    // Dish.findByPk(dishId)
-    .then((dishes)=> {
-        const dish = dishes[0];
+    Dish.findById(dishId)
+    .then((dish)=> {
         if(!dish){
             return res.redirect('/');
         }
@@ -62,14 +57,12 @@ exports.postEditDish = (req,res,next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const dishId = req.body.dishId;
-    console.log(req.body);
-    Dish.findByPk(dishId).then((dish) => {
-        dish.title = title;
-        dish.description = description;
-        dish.imageUrl = imageUrl;
-        dish.price = price;
-        return dish.save();
-    })
+
+    let updatedDish = new Dish(title, price, imageUrl, description, dishId);
+
+    
+    updatedDish
+    .save()
     .then(result => {
         console.log('dish updated');
         res.redirect('/');
@@ -79,8 +72,7 @@ exports.postEditDish = (req,res,next) => {
 }
 
 exports.getDishes =  (req,res,next) => {
-    req.user.getDishes()
-    // Dish.findAll()
+    Dish.fetchAll()
     .then((dishes) => {
         res.render('admin/dishes',{
             dishes: dishes,
@@ -95,9 +87,8 @@ exports.getDishes =  (req,res,next) => {
  exports.postDeleteDish = (req,res,next) => {
      const dishId = req.body.dishId;
 
-     Dish.findByPk(dishId).then((dish) => {
-         return dish.destroy();
-     }).then(result => {
+     Dish.deleteById(dishId)
+     .then(result => {
          console.log('destroyed dish');
          res.redirect('/');
      }).catch((err) => {
