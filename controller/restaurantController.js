@@ -1,11 +1,12 @@
 const Dish = require('../models/dish');
 const Cart = require('../models/cart');
 const User = require('../models/user');
+const Order = require('../models/order');
 
 
 exports.getDishes =  (req,res,next) => {
     console.log('hererererx');
-    Dish.fetchAll()
+    Dish.find()
     .then((dishes) => {
         res.render('restaurant/dish-list',{
             dishes: dishes,
@@ -32,7 +33,10 @@ exports.getDish =  (req,res,next) => {
 }
 
 exports.getCart =  (req,res,next) => {
-    req.user.getCart().then(dishes=> {
+    req.user.populate('cart.items.dishId')
+    .then(user=> {
+        const dishes = user.cart.items;
+        console.log(JSON.stringify(user));
         res.render('restaurant/cart',{
             dishes: dishes,
             pageTitle: 'Cart',
@@ -61,7 +65,7 @@ exports.postCart =  (req,res,next) => {
 
 
 exports.getIndex =  (req,res,next) => {
-    Dish.fetchAll()
+    Dish.find()
     .then((dishes) => {
         res.render('restaurant/index',{
             dishes: dishes,
@@ -75,7 +79,7 @@ exports.getIndex =  (req,res,next) => {
 }
 
 exports.getCheckout =  (req,res,next) => {
-    Dish.fetchAll().then(([dishData,fieldData]) => {
+    Dish.find().then(([dishData,fieldData]) => {
         res.render('restaurant/checkout',{
             dishes: dishData,
             pageTitle: 'Checkout',
@@ -87,7 +91,7 @@ exports.getCheckout =  (req,res,next) => {
 }
 
 exports.getOrders =  (req,res,next) => {
-    req.user.getOrders()
+    Order.find({'user.userId': req.user._id})
     .then(orders => {
         console.log(orders);
         res.render('restaurant/orders',{
@@ -101,8 +105,6 @@ exports.getOrders =  (req,res,next) => {
 
 exports.postCartDeleteDish = (req,res,next) => {
     const dishId = req.body.dishId;
-    console.log('MNNMNMNMNMNMNMNMNMN');
-    console.log(dishId);
     req.user.postCartDeleteDish(dishId)
     .then(result => {
         res.redirect('/cart');
@@ -112,7 +114,23 @@ exports.postCartDeleteDish = (req,res,next) => {
 }
 
 exports.postCreateOrder = (req,res,next) => {
-   req.user.addOrder()
+    req.user.populate('cart.items.dishId')
+    .then(user => {
+        const dishes = user.cart.items.map(d => {
+            return {quantity:d.quantity , dish: {...d.dishId._doc}}
+        })
+        const order = new Order({
+            user : {
+                name: req.user.name,
+                userId : req.user,
+            },
+            dishes : dishes,
+        });
+        return order.save();
+    })
+    .then(result => {
+        return req.user.clearCart()
+    })
     .then(result => {
         res.redirect('/orders');
     })

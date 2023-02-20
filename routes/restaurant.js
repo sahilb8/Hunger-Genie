@@ -19,7 +19,7 @@ router.get('/dishes/:dishId',restaurantController.getDish);
 
 router.get('/dishes',restaurantController.getDishes);
 
-// router.get('/checkout',restaurantController.getCheckout);
+// // router.get('/checkout',restaurantController.getCheckout);
 
 router.post('/create-order',restaurantController.postCreateOrder);
 
