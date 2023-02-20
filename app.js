@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const adminRouter = require('./routes/admin');
 const restaurantRouter = require('./routes/restaurant');
-const mongoConnect = require('./utils/database').mongoConnect;
 // const sequelize = require('./utils/database');
 
 // const Dish = require('./models/dish');
@@ -27,10 +27,10 @@ app.use(bodyParser.urlencoded({extended : false}));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.use((req,res,next) => {
-    User.findById("63edd324aa1358e81aacb6b5")
+    User.findById("63f2069e8497c1f3f0de70f8")
     .then(user => {
         console.log('in main app.js: ' + JSON.stringify(user));
-        req.user = new User(user.name, user.email, user.cart, user._id);
+        req.user = user;
         next();
     })
     .catch(err => {
@@ -76,6 +76,23 @@ app.use(error.get404);
 //     console.log(err);
 // })
 
-mongoConnect(() => {
+mongoose.connect('mongodb://127.0.0.1:27017/hunger_genie')
+.then(result => {
+    console.log('connection succesfull');
+    User.findById("63f2069e8497c1f3f0de70f8")
+    .then(user => {
+        if(!user){
+            const user = new User({
+                name: 'Sahil',
+                email: 'sahilQgmail.com',
+                cart: {
+                    items: []
+                },
+            });
+            user.save();
+        }
+    })
+
     app.listen(3000);
-});
+})
+.catch(err => console.log(err));

@@ -14,7 +14,13 @@ exports.postAddDish = (req,res,next) => {
     const description = req.body.description;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
-    let newDish = new Dish(title, price, imageUrl, description, null, req.user._id);
+    let newDish = new Dish({
+        title: title,
+        price: price,
+        imageUrl: imageUrl,
+        description: description,
+        userId: req.user,
+    });
     newDish.save()
     .then((response) => {
         console.log('created dish');
@@ -58,11 +64,16 @@ exports.postEditDish = (req,res,next) => {
     const price = req.body.price;
     const dishId = req.body.dishId;
 
-    let updatedDish = new Dish(title, price, imageUrl, description, dishId);
+    let updatedDish = new Dish({
+        title: title,
+        price: price,
+        imageUrl: imageUrl,
+        description: description,
+    });
 
+    console.log(updatedDish);
     
-    updatedDish
-    .save()
+    Dish.updateOne({_id: new mongodb.ObjectId(dishId)}, {updatedDish})
     .then(result => {
         console.log('dish updated');
         res.redirect('/');
@@ -72,7 +83,7 @@ exports.postEditDish = (req,res,next) => {
 }
 
 exports.getDishes =  (req,res,next) => {
-    Dish.fetchAll()
+    Dish.find()
     .then((dishes) => {
         res.render('admin/dishes',{
             dishes: dishes,
@@ -87,7 +98,7 @@ exports.getDishes =  (req,res,next) => {
  exports.postDeleteDish = (req,res,next) => {
      const dishId = req.body.dishId;
 
-     Dish.deleteById(dishId)
+     Dish.findByIdAndRemove(dishId)
      .then(result => {
          console.log('destroyed dish');
          res.redirect('/');
