@@ -12,6 +12,7 @@ exports.getDishes =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Restaurant',
             path:'/dishes',
+            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err)=> {
         console.log(err);
@@ -26,6 +27,7 @@ exports.getDish =  (req,res,next) => {
             dish: dish,
             pageTitle: 'Dish',
             path:'/dishes',
+            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err)=>{
         console.log(err);
@@ -41,6 +43,7 @@ exports.getCart =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Cart',
             path:'/cart',
+            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch(err => {
         console.log(err);
@@ -51,7 +54,7 @@ exports.postCart =  (req,res,next) => {
   const dishId = req.body.dishId;
   Dish.findById(dishId)
   .then(dish => {
-      req.user.addToCart(dish)
+    req.user.addToCart(dish)
       .then(result => {
           console.log('dish added');
           res.redirect('/cart');
@@ -71,6 +74,7 @@ exports.getIndex =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Restaurant',
             path:'/',
+            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err) => {
         console.log(err);
@@ -84,6 +88,7 @@ exports.getCheckout =  (req,res,next) => {
             dishes: dishData,
             pageTitle: 'Checkout',
             path:'/checkout',
+            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err) => {
         console.log(err);
@@ -91,13 +96,14 @@ exports.getCheckout =  (req,res,next) => {
 }
 
 exports.getOrders =  (req,res,next) => {
-    Order.find({'user.userId': req.user._id})
+    Order.find({'user.userId': req.session.user._id})
     .then(orders => {
         console.log(orders);
         res.render('restaurant/orders',{
             pageTitle: 'Orders',
             path:'/orders',
-            orders: orders
+            orders: orders,
+            isAuthenticated : req.session.isLoggedIn,
         });
     })
     .catch(err => console.log(err));
@@ -121,8 +127,8 @@ exports.postCreateOrder = (req,res,next) => {
         })
         const order = new Order({
             user : {
-                name: req.user.name,
-                userId : req.user,
+                name: req.session.user.name,
+                userId : req.session.user,
             },
             dishes : dishes,
         });

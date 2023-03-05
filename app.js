@@ -2,9 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const mongoDbStore = require('connect-mongodb-session')(session);
 
 const adminRouter = require('./routes/admin');
 const restaurantRouter = require('./routes/restaurant');
+const authRouter = require('./routes/auth');
 // const sequelize = require('./utils/database');
 
 // const Dish = require('./models/dish');
@@ -22,24 +25,30 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views','views');
 
+const store = new mongoDbStore({
+    uri: 'mongodb://127.0.0.1:27017/hunger_genie',
+    collection : 'session'
+});
 
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(express.static(path.join(__dirname,'public')));
+app.use(session({saveUninitialized: false, secret: 'my long string', resave: false, store: store}))
 
 app.use((req,res,next) => {
-    User.findById("63f2069e8497c1f3f0de70f8")
+    if(!req.session.user){
+        return next();
+    }
+    User.findById(req.session.user._id)
     .then(user => {
-        console.log('in main app.js: ' + JSON.stringify(user));
         req.user = user;
         next();
     })
-    .catch(err => {
-        console.log(err);
-    })
-});
+
+})
 
 app.use('/admin',adminRouter);
 app.use(restaurantRouter);
+app.use(authRouter);
 
 app.use(error.get404);
 
