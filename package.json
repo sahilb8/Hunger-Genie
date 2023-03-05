@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/sahilb8/Hunger-Genie#readme",
   "dependencies": {
+    "connect-mongodb-session": "^3.1.1",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.6",
+    "express-session": "^1.17.3",
     "mongodb": "^5.0.1",
     "mongoose": "^6.9.2",
     "mysql2": "^3.0.1",

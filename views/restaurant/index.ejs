@@ -21,9 +21,11 @@
                             <h2 class="product__price">$<%= dish.price %></h2>
                             <p class="product__description"><%= dish.description %></p>
                         </div>
-                        <div class="card__actions">
-                            <%- include('../includes/add-to-cart.ejs', { dish : dish })%>
-                        </div>
+                        <% if(isAuthenticated) {%>
+                            <div class="card__actions">
+                                <%- include('../includes/add-to-cart.ejs', { dish : dish })%>
+                            </div>
+                        <% } %>
                     </article>
                 <% } %>
             </div>
