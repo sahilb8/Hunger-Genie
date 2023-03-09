@@ -2,18 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 const adminController = require('../controller/adminController');
+const isAuth = require('../middleware/is-auth');
 
-router.get('/add-dish',adminController.getAddDish);
+router.get('/add-dish',isAuth, adminController.getAddDish);
  
-router.post('/add-dish',adminController.postAddDish);
+router.post('/add-dish',isAuth, adminController.postAddDish);
 
-router.get('/dishes',adminController.getDishes);
+router.get('/dishes',isAuth, adminController.getDishes);
 
-router.get('/edit-dish/:dishId',adminController.getEditDish);
+router.get('/edit-dish/:dishId',isAuth, adminController.getEditDish);
 
-router.post('/edit-dish',adminController.postEditDish);
+router.post('/edit-dish',isAuth, adminController.postEditDish);
 
-router.post('/delete-dish',adminController.postDeleteDish);
+router.post('/delete-dish',isAuth, adminController.postDeleteDish);
 
 
 

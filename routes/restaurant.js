@@ -5,23 +5,25 @@ const router = express.Router();
 
 const restaurantController = require('../controller/restaurantController');
 
-router.get('/',restaurantController.getIndex);
+const isAuth = require('../middleware/is-auth');
 
-router.get('/cart',restaurantController.getCart);
+router.get('/', restaurantController.getIndex);
 
-router.post('/cart',restaurantController.postCart);
+router.get('/cart',isAuth, restaurantController.getCart);
 
-router.post('/cart-delete-item',restaurantController.postCartDeleteDish);
+router.post('/cart',isAuth, restaurantController.postCart);
 
-router.get('/orders',restaurantController.getOrders);
+router.post('/cart-delete-item',isAuth, restaurantController.postCartDeleteDish);
 
-router.get('/dishes/:dishId',restaurantController.getDish);
+router.get('/orders',isAuth, restaurantController.getOrders);
 
-router.get('/dishes',restaurantController.getDishes);
+router.get('/dishes/:dishId',isAuth, restaurantController.getDish);
 
-// // router.get('/checkout',restaurantController.getCheckout);
+router.get('/dishes',isAuth, restaurantController.getDishes);
 
-router.post('/create-order',restaurantController.postCreateOrder);
+// // router.get('/checkout',isAuth, restaurantController.getCheckout);
+
+router.post('/create-order',isAuth, restaurantController.postCreateOrder);
 
 
 

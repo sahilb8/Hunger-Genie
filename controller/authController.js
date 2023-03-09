@@ -1,22 +1,45 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
+
 exports.getLogin =  (req,res,next) => {
-    console.log(req.session.isLoggedIn);
+    let msg = (req.flash('error'))[0];
+    console.log(msg);
+    if(!msg){
+        msg = '';
+    }
+    
+    console.log('POPOPOPOPOPOPOPO');
+    console.log(msg);
     res.render('auth/login',{
         pageTitle: 'Login',
         path:'/login',
-        isAuthenticated : req.session.isLoggedIn,
+        errorMessage: msg,
     });
 }
 
 exports.postLogin = (req,res,next) => {
-    User.findById("63f2069e8497c1f3f0de70f8")
+    const email = req.body.email;
+    const password = req.body.password;
+
+    User.findOne({email: email})
     .then(user => {
-        console.log('in main app.js: ' + JSON.stringify(user));
-        req.session.user = user;
-        req.session.isLoggedIn = true;
-        req.session.save((resp) => {
-            res.redirect('/');
+        if(!user) {
+            req.flash('error', 'Invalid email or password');
+            return res.redirect('/login');
+        }
+        bcrypt.compare(password, user.password)
+        .then((didMatch) => {
+            if(didMatch){
+                req.session.user = user;
+                return req.session.save((resp) => {
+                    res.redirect('/');
+                })
+            }
+            req.flash('error', 'Invalid email or password');
+            return res.redirect('/login');
         })
+        
     })
     .catch(err => {
         console.log(err);
@@ -30,3 +53,49 @@ exports.postLogout = (req,res,next) => {
     })
 }
 
+
+exports.postSignup = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+
+    User.findOne({email: email})
+    .then((userDoc) => {
+        if(userDoc){
+            return null;
+        }
+        return bcrypt.hash(password, 12);
+    })
+    .then((hashedPassword) => {
+        if(hashedPassword == null){
+            return 'user exists'
+        } else {
+            const user = new User({
+                email: email,
+                password: hashedPassword,
+                cart : {items:[]}
+            });
+    
+            console.log('created user object');
+            return user.save()
+        }
+    })
+    .then((resp) => {
+        console.log('saved user object');
+        if(resp == 'user exists'){
+            res.redirect('/login');
+        } else {
+            res.redirect('/signup');
+        }
+    })
+    .catch(err => console.log(err))
+};
+
+exports.getSignup = (req, res, next) => {
+    res.render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      isAuthenticated: false
+    });
+  };
+  
