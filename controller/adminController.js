@@ -6,7 +6,6 @@ exports.getAddDish =  (req,res,next) => {
         pageTitle: 'Add Dish',
         path:'admin/add-dish',
         editing: false,
-        isAuthenticated : req.session.isLoggedIn,
     });
 }
 
@@ -49,7 +48,6 @@ exports.getEditDish =  (req,res,next) => {
             path:'admin/edit-dish',
             editing: editing,
             dish: dish,
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err)=>{
         console.log(err);
@@ -91,7 +89,6 @@ exports.getDishes =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Admin Dishes',
             path:'/admin/dishes',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err) => {
         console.log(err);

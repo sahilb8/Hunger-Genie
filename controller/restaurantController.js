@@ -12,7 +12,6 @@ exports.getDishes =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Restaurant',
             path:'/dishes',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err)=> {
         console.log(err);
@@ -27,7 +26,6 @@ exports.getDish =  (req,res,next) => {
             dish: dish,
             pageTitle: 'Dish',
             path:'/dishes',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err)=>{
         console.log(err);
@@ -43,7 +41,6 @@ exports.getCart =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Cart',
             path:'/cart',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch(err => {
         console.log(err);
@@ -74,7 +71,6 @@ exports.getIndex =  (req,res,next) => {
             dishes: dishes,
             pageTitle: 'Restaurant',
             path:'/',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err) => {
         console.log(err);
@@ -88,7 +84,6 @@ exports.getCheckout =  (req,res,next) => {
             dishes: dishData,
             pageTitle: 'Checkout',
             path:'/checkout',
-            isAuthenticated : req.session.isLoggedIn,
         });
     }).catch((err) => {
         console.log(err);
@@ -103,7 +98,6 @@ exports.getOrders =  (req,res,next) => {
             pageTitle: 'Orders',
             path:'/orders',
             orders: orders,
-            isAuthenticated : req.session.isLoggedIn,
         });
     })
     .catch(err => console.log(err));
@@ -127,7 +121,7 @@ exports.postCreateOrder = (req,res,next) => {
         })
         const order = new Order({
             user : {
-                name: req.session.user.name,
+                email: req.session.user.email,
                 userId : req.session.user,
             },
             dishes : dishes,

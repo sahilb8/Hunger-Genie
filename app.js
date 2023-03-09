@@ -4,6 +4,8 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoDbStore = require('connect-mongodb-session')(session);
+const csurf = require("tiny-csrf");
+const flash = require('connect-flash');
 
 const adminRouter = require('./routes/admin');
 const restaurantRouter = require('./routes/restaurant');
@@ -25,6 +27,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views','views');
 
+
 const store = new mongoDbStore({
     uri: 'mongodb://127.0.0.1:27017/hunger_genie',
     collection : 'session'
@@ -45,6 +48,16 @@ app.use((req,res,next) => {
     })
 
 })
+
+
+app.use((req,res,next) => {
+    const csrfToken = '123456789iamasecret987654321look';
+    res.locals.isAuthenticated = false;
+    res.locals.csrfToken = csrfToken;
+    next();
+});
+
+app.use(flash());
 
 app.use('/admin',adminRouter);
 app.use(restaurantRouter);
@@ -88,19 +101,6 @@ app.use(error.get404);
 mongoose.connect('mongodb://127.0.0.1:27017/hunger_genie')
 .then(result => {
     console.log('connection succesfull');
-    User.findById("63f2069e8497c1f3f0de70f8")
-    .then(user => {
-        if(!user){
-            const user = new User({
-                name: 'Sahil',
-                email: 'sahilQgmail.com',
-                cart: {
-                    items: []
-                },
-            });
-            user.save();
-        }
-    })
 
     app.listen(3000);
 })
